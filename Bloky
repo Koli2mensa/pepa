@@ -1,0 +1,181 @@
+import time
+
+class Hra:
+    def __init__(self):
+        self.__pole = []
+
+        for i in range(5*8):
+            self.__pole.append(" ")
+
+    
+    def add(self,sloupec,hodnota):
+        if self.__pole[-(5-sloupec)] == " ":
+            self.__pole[-(5-sloupec)] = hodnota
+        else:
+            print("spatneE")
+            return False
+
+        seznam = self.trymove(sloupec,hodnota)
+        if seznam[-(5-sloupec)] == self.__pole[-(5-sloupec)]:
+            self.__pole == " "
+            print("spatne")
+            return False
+
+        else:
+            self.move(sloupec,hodnota)
+
+            return True
+
+        
+    def trymove(self,sloupec,hodnota):
+        seznam = []
+        pole = []
+        for i in range(len(self.__pole)):
+            pole.append(self.__pole[i])
+
+
+        self.printP(pole)
+
+        seznam.append([sloupec,8,hodnota])
+
+        while len(seznam) > 0:
+
+            can = 0
+            Hodnota = seznam[0][2]
+
+            if seznam[0][1] > 1:
+                if pole[seznam[0][0] + seznam[0][1] * 5 - 10] == " ":
+                    pole[seznam[0][0] + seznam[0][1] * 5 - 5] = " "
+                    seznam[0][1] = seznam[0][1] - 1
+                    can = 3
+
+            if seznam[0][1] > 1 and can < 3:
+                if pole[seznam[0][0] + seznam[0][1] * 5 - 5 - 5] == seznam[0][2]:
+                    pole[seznam[0][0] + seznam[0][1] * 5 - 5] = " "
+                    if can == 0:
+                        can = 1
+                    seznam[0][2] = seznam[0][2] * 2
+
+            if seznam[0][0] > 1 and can < 3:
+                if pole[seznam[0][0]-1 + seznam[0][1] * 5 - 5] == Hodnota:
+                    pole[seznam[0][0] - 1 + seznam[0][1] * 5 - 5] = " "
+                    if can < 3:
+                        can = can + 1
+                    seznam[0][2] = seznam[0][2] * 2
+                    seznam.append([seznam[0][0]-1,seznam[0][1],pole[seznam[0][0]-1 + seznam[0][1] * 5]])
+                    pole[seznam[0][0]-1 + seznam[0][1] * 5] = " "
+
+
+            if seznam[0][0] < 5 and can < 3:
+                if pole[seznam[0][0]+1 + seznam[0][1] * 5 - 5] == Hodnota:
+                    pole[seznam[0][0] + 1 + seznam[0][1] * 5 - 5] = " "
+                    if can < 3:
+                        seznam[0][2] = seznam[0][2] * 2
+                    seznam.append([seznam[0][0]+1,seznam[0][1],pole[seznam[0][0]-1 + seznam[0][1] * 5]])
+                    pole[seznam[0][0]+1 + seznam[0][1] * 5] = " "
+
+
+
+
+            pole[seznam[0][0] + seznam[0][1] * 5 - 5] = seznam[0][2]
+            if can != 0:
+                seznam.append(seznam[0])
+            seznam.pop(0)
+                
+        return pole
+
+
+    def move(self,sloupec,hodnota):
+        seznam = []
+
+
+        seznam.append([sloupec,8,hodnota])
+
+        while len(seznam) > 0:
+
+            can = 0
+            Hodnota = seznam[0][2]
+
+            if seznam[0][1] > 1:
+                if self.__pole[seznam[0][0] + seznam[0][1] * 5 - 10] == " ":
+                    self.__pole[seznam[0][0] + seznam[0][1] * 5 - 5] = " "
+                    seznam[0][1] = seznam[0][1] - 1
+                    can = 3
+
+            if seznam[0][1] > 1 and can < 3:
+                if self.__pole[seznam[0][0] + seznam[0][1] * 5 - 5 - 5] == seznam[0][2]:
+                    self.__pole[seznam[0][0] + seznam[0][1] * 5 - 5-5] = " "
+                    if can == 0:
+                        can = 1
+                    seznam[0][2] = seznam[0][2] * 2
+
+            if seznam[0][0] > 0 and can < 3:
+                if self.__pole[seznam[0][0]-1 + seznam[0][1] * 5 - 5] == Hodnota:
+                    self.__pole[seznam[0][0] - 1 + seznam[0][1] * 5 - 5] = " "
+                    if can < 3:
+                        can = can + 1
+                    seznam[0][2] = seznam[0][2] * 2
+                    seznam.append([seznam[0][0]-1,seznam[0][1],self.__pole[seznam[0][0]-1 + seznam[0][1] * 5]])
+                    print(self.__pole[seznam[0][0]-1 + seznam[0][1] * 5-5],"PISU")
+                    self.__pole[seznam[0][0]-1 + seznam[0][1] * 5] = " "
+
+            if seznam[0][0] < 4 and can < 3:
+                if self.__pole[seznam[0][0]+1 + seznam[0][1] * 5 - 5] == Hodnota:
+                    self.__pole[seznam[0][0] + 1 + seznam[0][1] * 5 - 5] = " "
+                    if can < 3:
+                        seznam[0][2] = seznam[0][2] * 2
+                    seznam.append([seznam[0][0]-1,seznam[0][1],self.__pole[seznam[0][0]+1 + seznam[0][1] * 5]])
+                    self.__pole[seznam[0][0]+1 + seznam[0][1] * 5] = " "
+                    print(self.__pole[seznam[0][0]-1 + seznam[0][1] * 5-5],"PISU")
+                                    
+
+
+            self.__pole[seznam[0][0] + seznam[0][1] * 5 - 5] = seznam[0][2]
+            if can != 0:
+                seznam.append(seznam[0])
+            seznam.pop(0)
+
+            self.printP(self.__pole)
+    
+                
+        return self.__pole
+
+
+    def printP(self,pole):
+        for i in range(8):
+            pomprom = ""
+
+            for g in range(5):
+                pomprom = pomprom + self.zarovnej(pole[i*5+g],4)
+                pomprom = pomprom + " "
+            print(pomprom)
+
+
+        print("-------------------")
+        time.sleep(0.1)
+
+
+                
+                    
+    def zarovnej(self,retezec,mista):
+        retezec = str(retezec)
+        vrat = ""
+        if len(retezec) > mista:
+            vrat = retezec[0:mista]
+
+        else:
+            vrat = retezec
+
+            for h in range(mista-len(retezec)):
+                vrat = " " + vrat
+                
+        return vrat
+
+
+hra = Hra()
+
+while True:
+    a= int(input())
+    b= int(input())
+    print("hazu")
+    hra.add(a,b)
